@@ -1,0 +1,49 @@
+SpringMvc注解配置
+
+//声明是配置类
+@Configuration
+//禁用默认springmvc配置         
+@EnableWebMvc
+//扫描包
+@ComponentScan("org.sang")
+public class MyMVCConfig {
+    @Bean
+    public InternalResourceViewResolver viewResolver() {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        //前缀
+        viewResolver.setPrefix("/WEB-INF/classes/views/");
+        //后缀
+        viewResolver.setSuffix(".jsp");
+        viewResolver.setViewClass(JstlView.class);
+        return viewResolver;
+    }
+}
+
+Web.xml注解配置
+
+需要实现WebApplicationInitializer接口
+
+
+public class WebInitializer implements WebApplicationInitializer {
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
+        ctx.register(MyMVCConfig.class);
+        ctx.setServletContext(servletContext);
+        ServletRegistration.Dynamic servlet = servletContext.addServlet("dispatcher", new DispatcherServlet(ctx));
+        servlet.addMapping("/");
+        servlet.setLoadOnStartup(1);
+    }
+}
+
+
+Spring boot配置
+
+在程序入口内中加入注解@ComponentScan("com.springboot.controller")去指定需要扫描的包
+
+thymeleaf？？
+
+Spring Security??
+
+JPA??
+JPA的全称叫做Java Persistence API，JPA是一个基于O/R映射的标准规范，在这个规范中，JPA只定义标准规则，不提供实现，使用者则需要按照规范中定义的方式来使用
+
